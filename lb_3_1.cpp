@@ -1,93 +1,62 @@
 #include <iostream>
 #include <cmath>
+#include "tg.h"
 
 using namespace std;
 
-int k = 3, n = 8;
-
-int get_binom(int n, int k);
-long get_factorial(int x);
-double get_bernoulli(int x);
-double get_tg(float x);
+double f1(double x, double *dev_pointer, int *n_pointer);
+double f2(double x, double *dev_pointer, int *n_pointer);
+double get_y(float x, double *dev_pointer, int *n_pointer);
 
 int main()
 {
-
-    for (float i = -2; i <= 2; i += 0.5)
-    {
-        float tg = get_tg(i);
-        cout << "self tg     \t" << i << "\t =" << tg << "\n";
-        cout << "standart tg \t" << i << "\t =" << tan(i) << "\n";
-        cout << "-----------------------------------------------\n";
+    int n = 8; // the length of the Taylor series
+    for (float i = -3; i <= 3; i += 0.5)
+    {   
+        int *n_pointer = &n;
+        double deviation = 0;
+        double *dev_pointer = &deviation;
+        double y = get_y(i, dev_pointer, n_pointer);
+        cout << "with x = " << i << "\t y = " << y << "\t n = " << n ;
+        cout <<  "\t deviation = " << deviation << "\n"; 
+        cout << "----------------------------------------------------------------\n";
     }
 
     return 0;
 }
-int get_binom(int n, int k)
+
+double f1(double x, double *dev_pointer, int *n_pointer)
 {
-    int res = get_factorial(n) / (get_factorial(k) * get_factorial(n - k));
-    // cout << "Binom of " << n <<" and "<< k << " = " << res << "\n";
+    int n = *n_pointer;
+    double res = (tg_t(x, n) - (x / 2)) / (tg_t((2 * x), n));
+    double st = (tan(x) - (x / 2)) / (tan(2 * x));
+    *dev_pointer = fabs(res - st);
     return res;
 }
-long get_factorial(int x)
+
+double f2(double x, double *dev_pointer, int *n_pointer)
 {
-    long res = 0;
-    if ((x < 0) || (x > 20))
+    int n = *n_pointer;
+    double res = tg_t((x + 2), n) - pow(tg_t((2 * x), n), 2);
+    double st = tan(x +2) - pow(tan(2 * x), 2);
+    *dev_pointer = fabs(res - st);
+    return res;
+}
+
+double get_y(float x, double *dev_pointer, int *n_pointer)
+{
+    double res;
+    if ((x >= -2) && (x < 0))
     {
-        cout << "Error! Factorial.";
-        return res;
+        res = f1(x, dev_pointer, n_pointer);
+    }
+    else if ((x <= 2) && (x > 0))
+    {
+        res = f2(x, dev_pointer, n_pointer);
     }
     else
     {
-        res = 1.0;
-        for (int i = 1; i <= x; i++)
-        {
-            res *= i;
-        }
-        // cout << "Fact of " << x << " = " << res << "\n";
-        return res;
-    }
-}
-double get_bernoulli(int x)
-{
-    double res = 0;
-    if (x == 1)
-    {
-        res = -0.5;
-    }
-    else if (x == 0)
-    {
-        res = 1;
-    }
-    else if (x == 2)
-    {
-        res = 1.0 / 6;
-    }
-    else if ((x % 2) == 1)
-    {
-        res = 0;
-    }
-    else
-    {
-        res = 0;
-        for (int i = 1; i <= x; i++)
-        {
-            double old_bernouli = get_bernoulli(x - i);
-            int binom = get_binom((x + 1), (i + 1));
-            double t = binom * old_bernouli;
-            res += t;
-        }
-        res *= (-1.0 / (x + 1));
-    }
-    return res;
-}
-double get_tg(float x)
-{
-    double res = 0;
-    for (int i = 1; i <= 5; i++)
-    {
-        double y = ((get_bernoulli(2 * i) * pow(-4, i) * (1 - pow(4, i))) / get_factorial(2 * i)) * pow(x, (2 * i - 1));
-        res += y;
+        res = NAN;
     }
     return res;
 }
