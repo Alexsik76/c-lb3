@@ -3,27 +3,29 @@
 
 using namespace std;
 
-int fib(int n);
+void fib(int *les_pointer, int *more_pointer, int *a_pointer);
 
-int main(){
- int a = 356, fib_les_a, fib_over_a, n = 1;
+int main()
+{
+    int a = 2584, fib_les_a, fib_over_a;
 
-int *les_pointer = &fib_les_a;
-int *more_pointer = &fib_over_a;
-while (*more_pointer < a) {
-    *les_pointer = fib(n);
-    n++;
-    *more_pointer = fib(n); 
-}
-fib_over_a = fib(n);
-fib_les_a = fib(n-1);
-cout << n <<"\t"<<fib_les_a<<"\t"<<fib_over_a<<"\n";
- return 0;
+    fib(&fib_les_a,  &fib_over_a, &a);
+
+    cout << fib_les_a << " <= " << a << " <= " << fib_over_a << "\n";
+    return 0;
 }
 
-int fib(int n) 
-{ 
-    if (n <= 1) 
-        return n; 
-    return fib(n - 1) + fib(n - 2); 
-} 
+void fib(int *les_pointer, int *more_pointer, int *a_pointer)
+{
+    int a = 0, b = 1, c = 0, i;
+
+    while (c < *a_pointer)
+    {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+
+    *more_pointer = c;
+    *les_pointer = a;
+}
