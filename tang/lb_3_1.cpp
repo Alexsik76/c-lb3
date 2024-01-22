@@ -8,22 +8,22 @@ double f1(double x, double *dev_pointer, int *n_pointer);
 double f2(double x, double *dev_pointer, int *n_pointer);
 double get_y(float x, double *dev_pointer, int *n_pointer);
 
-// int main()
-// {
-//     int n = 8; // the length of the Taylor series
-//     for (float i = -3; i <= 3; i += 0.5)
-//     {   
-//         int *n_pointer = &n;
-//         double deviation = 0;
-//         double *dev_pointer = &deviation;
-//         double y = get_y(i, dev_pointer, n_pointer);
-//         cout << "with x = " << i << "\t y = " << y << "\t n = " << n ;
-//         cout <<  "\t deviation = " << deviation << "\n"; 
-//         cout << "----------------------------------------------------------------\n";
-//     }
+int main()
+{
+    int n = 8; // the length of the Taylor series
+    for (float i = -3; i <= 3; i += 0.5)
+    {   
+        int *n_pointer = &n;
+        double deviation = 0;
+        double *dev_pointer = &deviation;
+        double y = get_y(i, dev_pointer, n_pointer);
+        cout << "with x = " << i << "\t y = " << y << "\t n = " << n ;
+        cout <<  "\t deviation = " << deviation << "\n"; 
+        cout << "----------------------------------------------------------------\n";
+    }
 
-//     return 0;
-// }
+    return 0;
+}
 
 double f1(double x, double *dev_pointer, int *n_pointer)
 {
